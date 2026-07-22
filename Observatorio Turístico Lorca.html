@@ -472,7 +472,8 @@ tr:hover td { background: var(--elev); }
     padding: 20px 22px;
     display: flex; align-items: center; gap: 18px;
 }
-.weather-icon { font-size: 54px; line-height: 1; }
+.weather-icon { line-height: 1; color: #2563eb; }
+.weather-icon svg { width: 54px; height: 54px; }
 .weather-temp {
     font-size: 38px; font-weight: 700;
     letter-spacing: -1px; line-height: 1;
@@ -509,7 +510,8 @@ tr:hover td { background: var(--elev); }
     font-size: 9px; color: var(--muted);
     text-transform: uppercase; letter-spacing: 0.5px;
 }
-.forecast-day .fd-icon { font-size: 22px; margin: 6px 0 4px; }
+.forecast-day .fd-icon { margin: 6px 0 4px; color: #2563eb; }
+.forecast-day .fd-icon svg { width: 22px; height: 22px; }
 .forecast-day .fd-max { font-size: 13px; font-weight: 600; }
 .forecast-day .fd-min { font-size: 11px; color: var(--muted); }
 
@@ -988,7 +990,7 @@ body.nav-hidden header { transform: translateY(-100%); }
     </div>
     <div class="weather-top">
       <div class="weather-now">
-        <div id="weather-icon" class="weather-icon">☀️</div>
+        <div id="weather-icon" class="weather-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></div>
         <div>
           <div id="weather-temp" class="weather-temp">--°</div>
           <div id="weather-desc" class="weather-desc">Cargando…</div>
@@ -2040,7 +2042,7 @@ function renderOfertaLorca() {
         cont.innerHTML = o.hoteles.map(h => `
             <div class="card-item">
                 <div class="ci-title">${h.name} <span style="color:var(--gold)">${"★".repeat(h.est)}</span></div>
-                <div class="ci-meta">🛏 ${h.hab} habitaciones · ${fmt0.format(h.plz)} plazas</div>
+                <div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M2 9v11M2 13h18a2 2 0 0 1 2 2v5M2 16h20M4 9h10a2 2 0 0 1 2 2v2"/></svg>${h.hab} habitaciones · ${fmt0.format(h.plz)} plazas</div>
             </div>`).join("");
     }
 
@@ -2502,7 +2504,19 @@ function renderAirport(j) {
 }
 
 // ── OPEN-METEO ──
-const WMO_ICONS = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌧️",61:"🌧️",63:"🌧️",65:"🌧️",71:"🌨️",73:"🌨️",75:"❄️",80:"🌦️",81:"🌧️",82:"⛈️",95:"⛈️",96:"⛈️",99:"⛈️"};
+const wsvg = p => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const _WI = {
+  sun:     wsvg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
+  partly:  wsvg('<path d="M12 2v2"/><path d="m4.9 4.9 1.4 1.4"/><path d="M20 12h2"/><path d="m17.7 4.9-1.4 1.4"/><path d="M16 12.5a4 4 0 1 0-6-4.5"/><path d="M13 22H7a5 5 0 1 1 4.9-6H13a3 3 0 0 1 0 6Z"/>'),
+  cloud:   wsvg('<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>'),
+  fog:     wsvg('<path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/><path d="M16 17H7M17 21H9"/>'),
+  drizzle: wsvg('<path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/><path d="M8 19v1M8 14v1M16 19v1M16 14v1M12 21v1M12 16v1"/>'),
+  rain:    wsvg('<path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/><path d="M16 14v6M8 14v6M12 16v6"/>'),
+  snow:    wsvg('<path d="M4 14.9A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.24"/><path d="M8 15h.01M8 19h.01M12 17h.01M12 21h.01M16 15h.01M16 19h.01"/>'),
+  storm:   wsvg('<path d="M6 16.3A7 7 0 1 1 15.7 8h1.8a4.5 4.5 0 0 1 .5 8.97"/><path d="m13 12-3 5h4l-3 5"/>')
+};
+const WMO_FALLBACK = _WI.cloud;
+const WMO_ICONS = {0:_WI.sun,1:_WI.partly,2:_WI.partly,3:_WI.cloud,45:_WI.fog,48:_WI.fog,51:_WI.drizzle,53:_WI.drizzle,55:_WI.rain,61:_WI.rain,63:_WI.rain,65:_WI.rain,71:_WI.snow,73:_WI.snow,75:_WI.snow,80:_WI.drizzle,81:_WI.rain,82:_WI.storm,95:_WI.storm,96:_WI.storm,99:_WI.storm};
 const WMO_DESC = {0:"Despejado",1:"Mayormente despejado",2:"Parcialmente nublado",3:"Cubierto",45:"Niebla",48:"Niebla con escarcha",51:"Llovizna ligera",53:"Llovizna",55:"Llovizna densa",61:"Lluvia ligera",63:"Lluvia",65:"Lluvia intensa",71:"Nieve ligera",73:"Nieve",75:"Nieve intensa",80:"Chubascos",81:"Chubascos fuertes",82:"Tormentas violentas",95:"Tormenta",96:"Tormenta con granizo",99:"Tormenta severa"};
 
 async function loadWeather() {
@@ -2516,7 +2530,7 @@ async function loadWeather() {
         const j = await (await fetch(url)).json();
         const c = j.current;
         const code = c.weather_code;
-        document.getElementById("weather-icon").textContent = WMO_ICONS[code] || "🌡️";
+        document.getElementById("weather-icon").innerHTML = WMO_ICONS[code] || WMO_FALLBACK;
         document.getElementById("weather-temp").textContent = fmt.format(c.temperature_2m) + "°";
         document.getElementById("weather-desc").textContent = (WMO_DESC[code] || "—") + " · Lorca";
         document.getElementById("ws-feels").textContent = fmt.format(c.apparent_temperature) + "°";
@@ -2528,7 +2542,7 @@ async function loadWeather() {
             const d = new Date(t);
             return `<div class="forecast-day">
                 <div class="fd-day">${DIAS[d.getDay()]} ${d.getDate()}</div>
-                <div class="fd-icon">${WMO_ICONS[j.daily.weather_code[i]] || "🌡️"}</div>
+                <div class="fd-icon">${WMO_ICONS[j.daily.weather_code[i]] || WMO_FALLBACK}</div>
                 <div class="fd-max">${fmt.format(j.daily.temperature_2m_max[i])}°</div>
                 <div class="fd-min">${fmt.format(j.daily.temperature_2m_min[i])}°</div>
             </div>`;
@@ -2619,8 +2633,8 @@ async function loadLorcaCKAN() {
         const dist = r.DISTANCIA || r.distancia || "";
         return `<div class="card-item">
             <div class="ci-title">${n}</div>
-            ${pob ? `<div class="ci-meta">👥 ${pob} hab.</div>` : ""}
-            ${dist ? `<div class="ci-meta">📍 ${dist} km</div>` : ""}
+            ${pob ? `<div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5M21 20a6 6 0 0 0-5-5.9"/></svg>${pob} hab.</div>` : ""}
+            ${dist ? `<div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>${dist} km</div>` : ""}
         </div>`;
     }).join("") || "<p style='color:var(--muted);font-size:12px'>No se han podido cargar las pedanías.</p>";
 
@@ -2629,7 +2643,7 @@ async function loadLorcaCKAN() {
         const pob = r.POBLACION || r.HABITANTES || "";
         return `<div class="card-item">
             <div class="ci-title">${n}</div>
-            ${pob ? `<div class="ci-meta">👥 ${pob} hab.</div>` : ""}
+            ${pob ? `<div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5M21 20a6 6 0 0 0-5-5.9"/></svg>${pob} hab.</div>` : ""}
         </div>`;
     }).join("") || "<p style='color:var(--muted);font-size:12px'>Sin barrios cargados.</p>";
 }
@@ -2704,9 +2718,9 @@ function carmMarker(rec) {
     const safePed = rec.ped ? rec.ped.replace(/[.*+?^${}()|[\]\\]/g, "") : "";
     const cat  = rec.stars ? `<div class="pop-meta" style="color:var(--gold)">${"★".repeat(rec.stars)}${rec.plz ? ` · ${rec.plz} plazas` : ""}</div>`
                : (rec.cat ? `<div class="pop-meta">${rec.cat}${rec.plz ? ` · ${rec.plz} plazas` : ""}</div>` : (rec.plz ? `<div class="pop-meta">${rec.plz} plazas</div>` : ""));
-    const addr = rec.addr ? `<div class="pop-meta">📍 ${rec.addr}${safePed && !new RegExp(safePed, "i").test(rec.addr) ? " · " + rec.ped : ""}</div>` : "";
-    const tel  = rec.tel ? `<div class="pop-meta">☎ ${rec.tel}</div>` : "";
-    const url  = rec.url ? `<div class="pop-meta"><a href="${fixUrl(rec.url)}" target="_blank">🌐 Web</a></div>` : "";
+    const addr = rec.addr ? `<div class="pop-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>${rec.addr}${safePed && !new RegExp(safePed, "i").test(rec.addr) ? " · " + rec.ped : ""}</div>` : "";
+    const tel  = rec.tel ? `<div class="pop-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.8.7 2.7a2 2 0 0 1-.4 2.1L8 9.5a16 16 0 0 0 6 6l1-1.3a2 2 0 0 1 2.1-.4c.9.3 1.7.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>${rec.tel}</div>` : "";
+    const url  = rec.url ? `<div class="pop-meta"><a href="${fixUrl(rec.url)}" target="_blank"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>Web</a></div>` : "";
     m.bindPopup(`<b>${rec.name}</b><br><span class="pop-tag" style="background:${rec.color}">${rec.typeLabel}</span>${cat}${addr}${tel}${url}`);
     return m;
 }
@@ -2771,9 +2785,9 @@ function renderOfertaList(types) {
     cont.innerHTML = rows.slice(0, 200).map(r => `
         <div class="card-item">
             <div class="ci-title">${r.name}${r.stars ? ` <span style="color:var(--gold)">${"★".repeat(r.stars)}</span>` : ""}</div>
-            ${r.addr ? `<div class="ci-meta">📍 ${r.addr}${/lorca\s*\(/i.test(r.ped) ? " · " + r.ped.replace(/.*\(([^)]+)\).*/, "$1") : ""}</div>` : ""}
-            ${r.plz ? `<div class="ci-meta">👥 ${r.plz} plazas</div>` : ""}
-            ${r.tel ? `<div class="ci-meta">☎ ${r.tel}</div>` : ""}
+            ${r.addr ? `<div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>${r.addr}${/lorca\s*\(/i.test(r.ped) ? " · " + r.ped.replace(/.*\(([^)]+)\).*/, "$1") : ""}</div>` : ""}
+            ${r.plz ? `<div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5M21 20a6 6 0 0 0-5-5.9"/></svg>${r.plz} plazas</div>` : ""}
+            ${r.tel ? `<div class="ci-meta"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2 4.2 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.8.7 2.7a2 2 0 0 1-.4 2.1L8 9.5a16 16 0 0 0 6 6l1-1.3a2 2 0 0 1 2.1-.4c.9.3 1.7.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>${r.tel}</div>` : ""}
             <span class="ci-tag" style="background:${r.color}22;color:${r.color}">${r.typeLabel}</span>
         </div>
     `).join("") || "<p style='color:var(--muted);font-size:12px'>Sin datos cargados (CORS o endpoint CARM).</p>";
