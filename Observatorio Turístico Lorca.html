@@ -3389,5 +3389,47 @@ loadAll();
 // Segunda pasada de ajuste tras el primer render (móviles lentos / fuentes web)
 window.addEventListener("load", () => setTimeout(resizeActiveCharts, 300));
 </script>
+<style>.fuente-graf{font-size:11px;opacity:.75;margin:8px 2px 0;line-height:1.4}.fuente-graf a{color:inherit;text-decoration:underline}</style>
+<script>
+const CAJA_GRAFICA = ".card, section";
+const FUENTES_GRAFICAS = {
+  "chDemoLorca": [["INE · Cifras oficiales de población (Padrón municipal)", "https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177012"]],
+  "chDemoSexoYoY": [["INE · Cifras oficiales de población (Padrón municipal)", "https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177012"]],
+  "chComparaPob": [["INE · Cifras oficiales de población (Padrón municipal)", "https://www.ine.es/dyngs/INEbase/es/operacion.htm?c=Estadistica_C&cid=1254736177012"]],
+  "chParoSexo": [["SEPE · Paro registrado por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chParoEdad": [["SEPE · Paro registrado por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chParoSect": [["SEPE · Paro registrado por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chContrTipo": [["SEPE · Contratos por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chContrTemp": [["SEPE · Contratos por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chContrSexo": [["SEPE · Contratos por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chContrSect": [["SEPE · Contratos por municipios", "https://www.sepe.es/HomeSepe/que-es-el-sepe/estadisticas/datos-estadisticos/municipios.html"]],
+  "chVUTratio": [["INE · Viviendas turísticas (estadística experimental)", "https://www.ine.es/jaxiT3/Tabla.htm?t=39363"]],
+  "chHotEstancia": [["INE · Viajeros y pernoctaciones por provincias (EOH)", "https://www.ine.es/jaxiT3/Tabla.htm?t=2074"]],
+  "chOfCategoria": [["CREM · Datos municipales de Lorca (ITREM)", "https://econet.carm.es/inicio/-/crem/sicrem/PU_LorcaCifrasNEW/Indice8.html"]],
+  "chOfHoteles": [["CREM · Datos municipales de Lorca (ITREM)", "https://econet.carm.es/inicio/-/crem/sicrem/PU_LorcaCifrasNEW/Indice8.html"]],
+  "chPedanias": [["Ayuntamiento de Lorca · datos abiertos", "https://datos.lorca.es"]],
+  "chAirportPax": [["Eurostat · avia_par_es", "https://ec.europa.eu/eurostat/databrowser/view/avia_par_es/default/table"]],
+  "chAirportTop": [["Eurostat · avia_par_es", "https://ec.europa.eu/eurostat/databrowser/view/avia_par_es/default/table"]],
+  "chTempForecast": [["Open-Meteo", "https://open-meteo.com/en/docs"]]
+};
+// ─── FUENTE BAJO CADA GRÁFICA ───────────────────────────────────────────────
+// Añade «Fuente: …» con enlace debajo de las gráficas que no la llevan ya.
+(function () {
+  const pon = () => {
+    for (const [id, fuentes] of Object.entries(FUENTES_GRAFICAS)) {
+      const c = document.getElementById(id);
+      if (!c) continue;
+      const caja = c.closest(CAJA_GRAFICA) || c.parentElement;
+      if (!caja || caja.querySelector('.fuente-graf') || /Fuente/i.test(caja.textContent || '')) continue;
+      const p = document.createElement('p');
+      p.className = 'fuente-graf';
+      p.innerHTML = 'Fuente: ' + fuentes.map(([t, u]) => u ? `<a href="${u}" target="_blank" rel="noopener">${t}</a>` : t).join(' · ');
+      caja.appendChild(p);
+    }
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', pon); else pon();
+  setTimeout(pon, 4000);
+})();
+</script>
 </body>
 </html>
